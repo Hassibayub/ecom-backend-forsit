@@ -22,9 +22,6 @@ class SaleUpdate(BaseModel):
 class SaleResponse(SaleBase, BaseResponse, TimestampMixin):
     id: int
 
-    class Config:
-        from_attributes = True
-
 class RevenueResponse(BaseModel):
     interval: str
     revenue: float

@@ -19,5 +19,4 @@ class ProductUpdate(BaseModel):
     category_id: Optional[int] = None
 
 class ProductResponse(ProductBase, BaseResponse, TimestampMixin):
-    class Config:
-        from_attributes = True 
+    pass 

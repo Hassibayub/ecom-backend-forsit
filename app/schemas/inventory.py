@@ -16,7 +16,4 @@ class InventoryUpdate(BaseModel):
     low_stock_threshold: Optional[int] = None
 
 class InventoryResponse(InventoryBase, BaseResponse, TimestampMixin):
-    id: int
-
-    class Config:
-        from_attributes = True 
+    id: int 

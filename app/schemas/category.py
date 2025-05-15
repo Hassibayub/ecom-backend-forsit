@@ -9,7 +9,4 @@ class CategoryCreate(CategoryBase):
     pass
 
 class CategoryResponse(CategoryBase, BaseResponse, TimestampMixin):
-    id: int
-
-    class Config:
-        from_attributes = True 
+    id: int 
