@@ -13,6 +13,16 @@ router = APIRouter(
     tags=["products"]
 )
 
+@router.get("/{product_id}", response_model=ProductResponse)
+def get_product(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Product with id {product_id} not found"
+        )
+    return product
+
 @router.get("/", response_model=List[ProductResponse])
 def list_products(
     skip: int = 0,
