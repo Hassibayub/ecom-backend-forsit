@@ -7,7 +7,7 @@ from enum import Enum
 
 from app.db.session import get_db
 from app.models.sale import Sale
-from app.schemas.sale import SaleResponse, RevenueResponse
+from app.schemas.sale import SaleResponse, RevenueResponse, ComparisonResponse
 
 router = APIRouter(
     prefix="/sales",
@@ -104,3 +104,49 @@ def list_sales(
     # Apply pagination
     sales = query.order_by(Sale.sale_date.desc()).offset(skip).limit(limit).all()
     return sales 
+
+@router.get("/compare", response_model=ComparisonResponse)
+def compare_revenue(
+    current_start: datetime = Query(..., description="Start date of current period"),
+    current_end: datetime = Query(..., description="End date of current period"),
+    previous_start: Optional[datetime] = None,
+    previous_end: Optional[datetime] = None,
+    db: Session = Depends(get_db)
+):
+    # Calculate previous period if not provided
+    if not previous_start or not previous_end:
+        period_days = (current_end - current_start).days
+        previous_end = current_start - timedelta(days=1)
+        previous_start = previous_end - timedelta(days=period_days)
+
+    # Get current period revenue
+    current_revenue = db.query(func.sum(Sale.amount)).filter(
+        Sale.sale_date >= current_start,
+        Sale.sale_date <= current_end
+    ).scalar() or 0
+
+    # Get previous period revenue
+    previous_revenue = db.query(func.sum(Sale.amount)).filter(
+        Sale.sale_date >= previous_start,
+        Sale.sale_date <= previous_end
+    ).scalar() or 0
+
+    # Calculate percentage change
+    if previous_revenue == 0:
+        percentage_change = 100 if current_revenue > 0 else 0
+    else:
+        percentage_change = ((current_revenue - previous_revenue) / previous_revenue) * 100
+
+    return ComparisonResponse(
+        current_period={
+            "start_date": current_start,
+            "end_date": current_end,
+            "revenue": current_revenue
+        },
+        previous_period={
+            "start_date": previous_start,
+            "end_date": previous_end,
+            "revenue": previous_revenue
+        },
+        percentage_change=percentage_change
+    ) 

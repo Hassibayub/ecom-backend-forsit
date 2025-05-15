@@ -26,4 +26,14 @@ class SaleResponse(SaleBase, BaseResponse, TimestampMixin):
 class RevenueResponse(BaseModel):
     interval: str
     revenue: float
-    total_sales: int 
+    total_sales: int
+
+class PeriodRevenue(BaseModel):
+    start_date: datetime
+    end_date: datetime
+    revenue: float
+
+class ComparisonResponse(BaseModel):
+    current_period: PeriodRevenue
+    previous_period: PeriodRevenue
+    percentage_change: float 
