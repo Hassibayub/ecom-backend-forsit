@@ -63,7 +63,7 @@ def get_revenue_by_interval(
     # Calculate revenue
     revenue_data = query.with_entities(
         func.date_format(Sale.sale_date, date_format).label("interval"),
-        func.sum(Sale.amount).label("revenue"),
+        func.sum(Sale.total_amount).label("revenue"),
         func.count(Sale.id).label("total_sales")
     ).all()
 
@@ -97,13 +97,13 @@ def list_sales(
     if product_id:
         query = query.filter(Sale.product_id == product_id)
     if min_amount:
-        query = query.filter(Sale.amount >= min_amount)
+        query = query.filter(Sale.total_amount >= min_amount)
     if max_amount:
-        query = query.filter(Sale.amount <= max_amount)
+        query = query.filter(Sale.total_amount <= max_amount)
     
     # Apply pagination
     sales = query.order_by(Sale.sale_date.desc()).offset(skip).limit(limit).all()
-    return sales 
+    return sales
 
 @router.get("/compare", response_model=ComparisonResponse)
 def compare_revenue(
@@ -120,13 +120,13 @@ def compare_revenue(
         previous_start = previous_end - timedelta(days=period_days)
 
     # Get current period revenue
-    current_revenue = db.query(func.sum(Sale.amount)).filter(
+    current_revenue = db.query(func.sum(Sale.total_amount)).filter(
         Sale.sale_date >= current_start,
         Sale.sale_date <= current_end
     ).scalar() or 0
 
     # Get previous period revenue
-    previous_revenue = db.query(func.sum(Sale.amount)).filter(
+    previous_revenue = db.query(func.sum(Sale.total_amount)).filter(
         Sale.sale_date >= previous_start,
         Sale.sale_date <= previous_end
     ).scalar() or 0
