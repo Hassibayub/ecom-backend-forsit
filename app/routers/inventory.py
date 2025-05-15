@@ -26,7 +26,7 @@ def update_inventory(
         )
     
     # Update the inventory
-    update_data = inventory_update.dict(exclude_unset=True)
+    update_data = inventory_update.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(inventory, field, value)
     

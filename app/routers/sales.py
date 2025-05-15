@@ -7,7 +7,7 @@ from enum import Enum
 
 from app.db.session import get_db
 from app.models.sale import Sale
-from app.schemas.sale import SaleResponse, RevenueResponse, ComparisonResponse
+from app.schemas.sale import SaleResponse, RevenueResponse, ComparisonResponse, SaleCreate
 
 router = APIRouter(
     prefix="/sales",
@@ -27,7 +27,6 @@ def get_revenue_by_interval(
     end_date: Optional[datetime] = None,
     db: Session = Depends(get_db)
 ):
-    # Set default date range if not provided
     if not end_date:
         end_date = datetime.now()
     if not start_date:
@@ -37,32 +36,46 @@ def get_revenue_by_interval(
             start_date = end_date - timedelta(weeks=12)
         elif interval == IntervalType.MONTHLY:
             start_date = end_date - timedelta(days=365)
-        else:  # yearly
+        else:
             start_date = end_date - timedelta(days=365*5)
 
-    # Base query with date filter
     query = db.query(Sale).filter(
         Sale.sale_date >= start_date,
         Sale.sale_date <= end_date
     )
 
-    # Group by interval
+    dialect = db.bind.dialect.name
     if interval == IntervalType.DAILY:
-        query = query.group_by(func.date(Sale.sale_date))
-        date_format = "%Y-%m-%d"
+        group_expr = func.date(Sale.sale_date)
+        if dialect == "sqlite":
+            label_expr = func.strftime("%Y-%m-%d", Sale.sale_date)
+        else:
+            label_expr = func.date_format(Sale.sale_date, "%Y-%m-%d")
     elif interval == IntervalType.WEEKLY:
-        query = query.group_by(func.yearweek(Sale.sale_date))
-        date_format = "%Y-%U"
+        if dialect == "sqlite":
+            group_expr = func.strftime("%Y-%W", Sale.sale_date)
+            label_expr = func.strftime("%Y-%W", Sale.sale_date)
+        else:
+            group_expr = func.yearweek(Sale.sale_date)
+            label_expr = func.date_format(Sale.sale_date, "%Y-%U")
     elif interval == IntervalType.MONTHLY:
-        query = query.group_by(func.date_format(Sale.sale_date, "%Y-%m"))
-        date_format = "%Y-%m"
-    else:  # yearly
-        query = query.group_by(func.year(Sale.sale_date))
-        date_format = "%Y"
+        if dialect == "sqlite":
+            group_expr = func.strftime("%Y-%m", Sale.sale_date)
+            label_expr = func.strftime("%Y-%m", Sale.sale_date)
+        else:
+            group_expr = func.date_format(Sale.sale_date, "%Y-%m")
+            label_expr = func.date_format(Sale.sale_date, "%Y-%m")
+    else:
+        if dialect == "sqlite":
+            group_expr = func.strftime("%Y", Sale.sale_date)
+            label_expr = func.strftime("%Y", Sale.sale_date)
+        else:
+            group_expr = func.year(Sale.sale_date)
+            label_expr = func.date_format(Sale.sale_date, "%Y")
 
-    # Calculate revenue
+    query = query.group_by(group_expr)
     revenue_data = query.with_entities(
-        func.date_format(Sale.sale_date, date_format).label("interval"),
+        label_expr.label("interval"),
         func.sum(Sale.total_amount).label("revenue"),
         func.count(Sale.id).label("total_sales")
     ).all()
@@ -149,4 +162,12 @@ def compare_revenue(
             "revenue": previous_revenue
         },
         percentage_change=percentage_change
-    ) 
+    )
+
+@router.post("/", response_model=SaleResponse)
+def create_sale(sale: SaleCreate, db: Session = Depends(get_db)):
+    db_sale = Sale(**sale.model_dump())
+    db.add(db_sale)
+    db.commit()
+    db.refresh(db_sale)
+    return db_sale 

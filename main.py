@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 
-from app.routers import products, inventory, sales
+from app.routers import products, inventory, sales, categories
 
 # Load environment variables
 load_dotenv()
@@ -29,6 +29,7 @@ API_PORT = int(os.getenv("API_PORT", "8000"))
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 # Include routers
+app.include_router(categories.router)
 app.include_router(products.router)
 app.include_router(inventory.router)
 app.include_router(sales.router)
