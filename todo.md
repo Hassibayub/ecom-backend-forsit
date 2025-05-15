@@ -30,70 +30,70 @@ seed\_data.py
 
 ## 2. ⚙️ FastAPI Boilerplate
 
-- [ ] Create `main.py` with FastAPI app instance
-- [ ] Add middleware and exception handlers (optional)
-- [ ] Configure environment variables with `.env`
+- [x] Create `main.py` with FastAPI app instance
+- [ ] Add middleware and exception handlers (optional) [no need now].
+- [x] Configure environment variables with `.env`
 
 ---
 
 ## 3. 🗃️ Database Setup
 
-- [ ] Define SQLAlchemy database engine and session logic (`/db/session.py`)
-- [ ] Define models:
-  - [ ] `Product`
-  - [ ] `Category`
-  - [ ] `Sale`
-  - [ ] `Inventory`
-- [ ] Create Pydantic schemas for input/output
-- [ ] Run migrations manually or with Alembic (optional)
+- [x] Define SQLAlchemy database engine and session logic (`/db/session.py`)
+- [x] Define models:
+  - [x] `Product`
+  - [x] `Category`
+  - [x] `Sale`
+  - [x] `Inventory`
+- [x] Create Pydantic schemas for input/output
+- [x] Run migrations manually or with Alembic (optional)
 
 ---
 
 ## 4. 🧩 Feature Implementation
 
 ### 4.1 Product Management
-- [ ] `POST /products`: Add new product
-- [ ] `GET /products`: List all products
-- [ ] `GET /products/{product_id}`: Product details
+- [x] `POST /products`: Add new product
+- [x] `GET /products`: List all products
+- [x] `GET /products/{product_id}`: Product details
 
 ### 4.2 Inventory Management
-- [ ] `GET /inventory`: List current stock
-- [ ] `GET /inventory/low-stock`: Products below threshold
-- [ ] `PATCH /inventory/{product_id}`: Update stock
+- [x] `GET /inventory`: List current stock
+- [x] `GET /inventory/low-stock`: Products below threshold
+- [x] `PATCH /inventory/{product_id}`: Update stock
 
 ### 4.3 Sales & Revenue
-- [ ] `GET /sales`: Filterable sales data
-- [ ] `GET /sales/revenue`: Revenue by interval
-- [ ] `GET /sales/compare`: Revenue comparison
+- [x] `GET /sales`: Filterable sales data
+- [x] `GET /sales/revenue`: Revenue by interval
+- [x] `GET /sales/compare`: Revenue comparison
 
 ---
 
 ## 5. 🧪 Testing
 
-- [ ] Write unit tests for models and business logic
-- [ ] Write integration tests for all endpoints using FastAPI `TestClient`
-- [ ] Add sample test DB or test fixtures
+- [x] Write unit tests for models and business logic
+- [x] Write integration tests for all endpoints using FastAPI `TestClient`
+- [ ] Add sample test DB or test fixtures [SKIP IT]
 
 ---
 
 ## 6. 🧰 Demo Data
 
-- [ ] Create `seed_data.py` script
-- [ ] Use Faker to generate:
-  - [ ] Sample categories
-  - [ ] Products with prices & stock
-  - [ ] Sales records with dates
+- [x] Create `seed_data.py` script
+- [x] Use Faker to generate:
+  - [x] Sample categories
+  - [x] Products with prices & stock
+  - [x] Sales records with dates
 
 ---
 
 ## 7. 📘 Documentation
 
-- [ ] Generate API docs via `/docs` and `/redoc`
-- [ ] Write `README.md`:
-  - [ ] Setup instructions
-  - [ ] Seed script usage
-  - [ ] Endpoint summary
-- [ ] Write `database_schema.md` or include schema in README
+- [x] Generate API docs via `/docs` and `/redoc`
+- [x] Write `README.md`:
+  - [x] Setup instructions
+  - [x] Seed script usage
+  - [x] Endpoint summary
+- [x] Write `database_schema.md` or include schema in README
 
 ---
 
