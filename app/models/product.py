@@ -14,7 +14,7 @@ class Product(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationships
-    category = relationship("Category", back_populates="products")
-    inventory = relationship("Inventory", back_populates="product", uselist=False)
-    sales = relationship("Sale", back_populates="product") 
+    # Relationships with string references
+    category = relationship("Category", back_populates="products", lazy="joined")
+    inventory = relationship("Inventory", back_populates="product", uselist=False, lazy="joined")
+    sales = relationship("Sale", back_populates="product", lazy="joined") 
