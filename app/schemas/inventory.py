@@ -12,9 +12,11 @@ class InventoryCreate(InventoryBase):
     pass
 
 class InventoryUpdate(BaseModel):
-    quantity: Optional[int] = Field(None, ge=0)
-    low_stock_threshold: Optional[int] = Field(None, ge=0)
+    quantity: Optional[int] = None
+    low_stock_threshold: Optional[int] = None
 
 class InventoryResponse(InventoryBase, BaseResponse, TimestampMixin):
+    id: int
+
     class Config:
         from_attributes = True 

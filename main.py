@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 
-from app.routers import products
+from app.routers import products, inventory
 
 # Load environment variables
 load_dotenv()
@@ -30,6 +30,7 @@ DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 # Include routers
 app.include_router(products.router)
+app.include_router(inventory.router)
 
 @app.get("/")
 async def root():
