@@ -21,4 +21,9 @@ class SaleResponse(SaleBase, BaseResponse, TimestampMixin):
     id: int
 
     class Config:
-        from_attributes = True 
+        from_attributes = True
+
+class RevenueResponse(BaseModel):
+    interval: str
+    revenue: float
+    total_sales: int 
