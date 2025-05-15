@@ -13,6 +13,15 @@ router = APIRouter(
     tags=["products"]
 )
 
+@router.get("/", response_model=List[ProductResponse])
+def list_products(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db)
+):
+    products = db.query(Product).offset(skip).limit(limit).all()
+    return products
+
 @router.post("/", response_model=ProductResponse)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     # Check if category exists
