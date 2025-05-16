@@ -39,45 +39,37 @@ def get_revenue_by_interval(
         else:
             start_date = end_date - timedelta(days=365*5)
 
-    query = db.query(Sale).filter(
-        Sale.sale_date >= start_date,
-        Sale.sale_date <= end_date
-    )
-
     dialect = db.bind.dialect.name
     if interval == IntervalType.DAILY:
-        group_expr = func.date(Sale.sale_date)
         if dialect == "sqlite":
-            label_expr = func.strftime("%Y-%m-%d", Sale.sale_date)
+            date_expr = func.strftime("%Y-%m-%d", Sale.sale_date)
         else:
-            label_expr = func.date_format(Sale.sale_date, "%Y-%m-%d")
+            date_expr = func.date_format(Sale.sale_date, "%Y-%m-%d")
     elif interval == IntervalType.WEEKLY:
         if dialect == "sqlite":
-            group_expr = func.strftime("%Y-%W", Sale.sale_date)
-            label_expr = func.strftime("%Y-%W", Sale.sale_date)
+            date_expr = func.strftime("%Y-%W", Sale.sale_date)
         else:
-            group_expr = func.yearweek(Sale.sale_date)
-            label_expr = func.date_format(Sale.sale_date, "%Y-%U")
+            date_expr = func.date_format(Sale.sale_date, "%Y-%U")
     elif interval == IntervalType.MONTHLY:
         if dialect == "sqlite":
-            group_expr = func.strftime("%Y-%m", Sale.sale_date)
-            label_expr = func.strftime("%Y-%m", Sale.sale_date)
+            date_expr = func.strftime("%Y-%m", Sale.sale_date)
         else:
-            group_expr = func.date_format(Sale.sale_date, "%Y-%m")
-            label_expr = func.date_format(Sale.sale_date, "%Y-%m")
-    else:
+            date_expr = func.date_format(Sale.sale_date, "%Y-%m")
+    else:  # YEARLY
         if dialect == "sqlite":
-            group_expr = func.strftime("%Y", Sale.sale_date)
-            label_expr = func.strftime("%Y", Sale.sale_date)
+            date_expr = func.strftime("%Y", Sale.sale_date)
         else:
-            group_expr = func.year(Sale.sale_date)
-            label_expr = func.date_format(Sale.sale_date, "%Y")
+            date_expr = func.date_format(Sale.sale_date, "%Y")
 
-    query = query.group_by(group_expr)
-    revenue_data = query.with_entities(
-        label_expr.label("interval"),
+    revenue_data = db.query(
+        date_expr.label("interval"),
         func.sum(Sale.total_amount).label("revenue"),
         func.count(Sale.id).label("total_sales")
+    ).filter(
+        Sale.sale_date >= start_date,
+        Sale.sale_date <= end_date
+    ).group_by(
+        date_expr
     ).all()
 
     return [
