@@ -18,8 +18,29 @@ A FastAPI-based backend for managing an e-commerce platform's admin operations, 
 - Pydantic
 - pytest (Testing)
 - Faker (Data Generation)
+- Docker & Docker Compose
 
 ## Setup Instructions
+
+### Option 1: Using Docker (Recommended)
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd e-commerce-admin-api
+```
+
+2. Build and start the containers:
+```bash
+docker-compose up --build
+```
+
+The application will be available at:
+- API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
+- Database: localhost:3306
+
+### Option 2: Manual Setup
 
 1. Clone the repository:
 ```bash
@@ -118,8 +139,12 @@ The API will be available at `http://localhost:8000`
 
 ## Seed Data
 
-To populate the database with sample data:
+### Using Docker
+```bash
+docker-compose exec web python seed_data.py
+```
 
+### Manual Setup
 ```bash
 python seed_data.py
 ```
@@ -131,7 +156,12 @@ This will create:
 
 ## Testing
 
-Run tests with:
+### Using Docker
+```bash
+docker-compose exec web pytest
+```
+
+### Manual Setup
 ```bash
 pytest
 ```
@@ -143,6 +173,12 @@ pytest --cov=app tests/
 
 ## Development
 
+### Using Docker
+1. The application runs with hot-reload enabled
+2. Code changes will automatically trigger a reload
+3. Database is persisted in a Docker volume
+
+### Manual Setup
 1. Install development dependencies:
 ```bash
 pip install -r requirements-dev.txt
@@ -157,3 +193,12 @@ flake8 app tests
 ```bash
 mypy app
 ```
+
+## Docker Commands
+
+- Start the application: `docker-compose up`
+- Start in detached mode: `docker-compose up -d`
+- Stop the application: `docker-compose down`
+- View logs: `docker-compose logs -f`
+- Rebuild containers: `docker-compose up --build`
+- Remove volumes: `docker-compose down -v`
