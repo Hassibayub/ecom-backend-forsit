@@ -17,14 +17,14 @@ DATABASE_URL = os.getenv("DATABASE_URL", f"mysql+mysqlconnector://{DB_USER}:{DB_
 
 print(f"Using database URL: {DATABASE_URL.replace(DB_PASSWORD, '********')}")
 
-# Additional connection parameters to handle network issues in containerized environment
+
 engine = create_engine(
     DATABASE_URL,
-    pool_recycle=3600,  # Recycle connections after 1 hour to avoid stale connections
-    pool_pre_ping=True,  # Check connection validity before use
+    pool_recycle=3600,  
+    pool_pre_ping=True, 
     connect_args={
         "connect_timeout": 30,  # Longer timeout for initial connection
-        "use_pure": True  # Use pure Python implementation for better compatibility
+        "use_pure": True 
     }
 )
 
