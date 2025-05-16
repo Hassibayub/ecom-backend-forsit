@@ -26,7 +26,7 @@ A FastAPI-based backend for managing an e-commerce platform's admin operations, 
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Hassibayub/ecom-backend-forsit.git
 cd e-commerce-admin-api
 ```
 
@@ -44,7 +44,7 @@ The application will be available at:
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Hassibayub/ecom-backend-forsit.git
 cd e-commerce-admin-api
 ```
 
@@ -166,33 +166,12 @@ docker-compose exec web pytest
 pytest
 ```
 
-Run tests with coverage:
-```bash
-pytest --cov=app tests/
-```
-
 ## Development
 
 ### Using Docker
 1. The application runs with hot-reload enabled
 2. Code changes will automatically trigger a reload
 3. Database is persisted in a Docker volume
-
-### Manual Setup
-1. Install development dependencies:
-```bash
-pip install -r requirements-dev.txt
-```
-
-2. Run linting:
-```bash
-flake8 app tests
-```
-
-3. Run type checking:
-```bash
-mypy app
-```
 
 ## Docker Commands
 
