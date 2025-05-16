@@ -1,8 +1,10 @@
 fastapi
-uvicorn
+uvicorn[standard]
 sqlalchemy
 pydantic
 mysql-connector-python
+python-dotenv
+databases[mysql]
+cryptography
 pytest
-faker # to generate fake data
-python-dotenv 
+faker # to generate fake data 

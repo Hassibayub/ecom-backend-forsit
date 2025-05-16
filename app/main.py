@@ -1,11 +1,11 @@
 import os
-
+import time
 import mysql.connector
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db.session import Base, engine
+from app.db.session import Base, engine, get_db
 from app.routers import categories, inventory, products, sales
 
 load_dotenv()
@@ -33,34 +33,33 @@ DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 # Create database tables on startup
 @app.on_event("startup")
 async def startup_event():
-    try:
-        # Extract database name from DATABASE_URL
-        db_url = os.getenv("DATABASE_URL")
-        db_name = db_url.split("/")[-1]
-        print("Database url: ", db_url)
-        print("Database name: ", db_name)
-        
-        # Create connection without database
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="password123"
-        )
-        cursor = conn.cursor()
-        
-        # Create database if it doesn't exist
-        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
-        print(f"Database '{db_name}' created or already exists")
-        
-        cursor.close()
-        conn.close()
-        
-        # Now create tables
-        Base.metadata.create_all(bind=engine)
-        print("Database tables created successfully")
-    except Exception as e:
-        print(f"Error during database initialization: {e}")
-        raise e
+    # Get database connection parameters from environment variables
+    db_host = os.getenv("MYSQL_HOST", "db")
+    db_user = os.getenv("MYSQL_USER", "root")
+    db_password = os.getenv("MYSQL_PASSWORD", "password123")
+    db_name = os.getenv("MYSQL_DATABASE", "ecommerce_admin")
+    
+    print(f"Connecting to database: {db_host}/{db_name} as user {db_user}")
+    
+    # Attempt to connect multiple times with a delay (useful for container startup)
+    max_retries = 5
+    retry_delay = 5  # seconds
+    
+    for attempt in range(max_retries):
+        try:
+            # Create tables in the database
+            print(f"Attempt {attempt + 1}/{max_retries} to create tables")
+            Base.metadata.create_all(bind=engine)
+            print("Database tables created successfully")
+            return
+        except Exception as e:
+            print(f"Error during database initialization (attempt {attempt + 1}): {e}")
+            if attempt < max_retries - 1:
+                print(f"Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+            else:
+                print("Max retries reached. Could not initialize database.")
+                raise e
 
 # Include routers
 app.include_router(categories.router)
