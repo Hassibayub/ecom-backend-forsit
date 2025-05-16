@@ -1,7 +1,10 @@
-from sqlalchemy import Column, Integer, Float, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
 from datetime import datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer
+from sqlalchemy.orm import relationship
+
 from app.db.session import Base
+
 
 class Sale(Base):
     __tablename__ = "sales"

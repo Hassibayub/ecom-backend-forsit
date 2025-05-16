@@ -1,7 +1,9 @@
-from pydantic import BaseModel, Field
 from typing import Optional
-from datetime import datetime
-from .base import TimestampMixin, BaseResponse
+
+from pydantic import BaseModel, Field
+
+from .base import BaseResponse, TimestampMixin
+
 
 class InventoryBase(BaseModel):
     product_id: int

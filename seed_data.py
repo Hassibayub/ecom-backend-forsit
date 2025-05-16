@@ -1,12 +1,13 @@
+import random
+from datetime import datetime, timedelta
+
 from faker import Faker
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
-import random
 
 from app.db.session import SessionLocal
 from app.models.category import Category
-from app.models.product import Product
 from app.models.inventory import Inventory
+from app.models.product import Product
 from app.models.sale import Sale
 
 fake = Faker()

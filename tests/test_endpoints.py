@@ -1,16 +1,13 @@
+from datetime import datetime, timedelta
+
 import pytest
 from fastapi.testclient import TestClient
-from datetime import datetime, timedelta
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.main import app
 from app.db.session import Base, get_db
-from app.models.product import Product
-from app.models.category import Category
-from app.models.inventory import Inventory
-from app.models.sale import Sale
+from app.main import app
 
 # Create in-memory SQLite database for testing
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"

@@ -1,5 +1,7 @@
 from pydantic import BaseModel
-from .base import TimestampMixin, BaseResponse
+
+from .base import BaseResponse, TimestampMixin
+
 
 class CategoryBase(BaseModel):
     name: str

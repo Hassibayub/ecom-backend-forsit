@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, Query
-from sqlalchemy.orm import Session
-from sqlalchemy import func
-from typing import List, Optional
 from datetime import datetime, timedelta
 from enum import Enum
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import func
+from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.sale import Sale
-from app.schemas.sale import SaleResponse, RevenueResponse, ComparisonResponse, SaleCreate
+from app.schemas.sale import ComparisonResponse, RevenueResponse, SaleCreate, SaleResponse
 
 router = APIRouter(
     prefix="/sales",

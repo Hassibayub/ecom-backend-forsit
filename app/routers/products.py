@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 from typing import List
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
 from app.db.session import get_db
-from app.schemas.product import ProductCreate, ProductResponse
-from app.models.product import Product
-from app.models.inventory import Inventory
 from app.models.category import Category
+from app.models.inventory import Inventory
+from app.models.product import Product
+from app.schemas.product import ProductCreate, ProductResponse
 
 router = APIRouter(
     prefix="/products",

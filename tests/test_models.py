@@ -1,13 +1,14 @@
-import pytest
 from datetime import datetime
+
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.db.session import Base, get_db
-from app.models.product import Product
+from app.db.session import Base
 from app.models.category import Category
 from app.models.inventory import Inventory
+from app.models.product import Product
 from app.models.sale import Sale
 
 # Create in-memory SQLite database for testing

@@ -1,7 +1,10 @@
-from pydantic import BaseModel, Field
-from typing import Optional
 from datetime import datetime
-from .base import TimestampMixin, BaseResponse
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from .base import BaseResponse, TimestampMixin
+
 
 class SaleBase(BaseModel):
     product_id: int

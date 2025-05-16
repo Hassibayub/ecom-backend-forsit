@@ -1,9 +1,5 @@
-from app.db.session import engine
-from app.models.product import Product
-from app.models.category import Category
-from app.models.sale import Sale
-from app.models.inventory import Inventory
-from app.db.session import Base
+from app.db.session import Base, engine
+
 
 def create_tables():
     Base.metadata.create_all(bind=engine)

@@ -1,12 +1,12 @@
+import os
+
+import mysql.connector
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-import os
-import mysql.connector
-from sqlalchemy import create_engine, text
 
-from app.routers import products, inventory, sales, categories
-from app.db.session import engine, Base
+from app.db.session import Base, engine
+from app.routers import categories, inventory, products, sales
 
 load_dotenv()
 
